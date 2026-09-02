@@ -1,3 +1,4 @@
+import base64
 import os
 import streamlit as st
 
@@ -6,7 +7,8 @@ st.set_page_config(page_title="PPWR-Rollenprüfung", layout="centered")
 st.markdown("""
 <style>
 html, body, .stApp { font-family: Arial, sans-serif; }
-[data-testid="stImage"] { display: block; margin-left: auto !important; margin-right: auto !important; width: 200px !important; }
+.logo-wrap { text-align: center; margin-bottom: 0.5rem; }
+.logo-wrap img { width: 200px; }
 h1.ppwrtitle { color: #004996; text-align: center; margin: 0.5rem 0 0; font-family: Arial, sans-serif; }
 .subtitle { text-align: center; color: #004996; margin-top: 2px; font-family: Arial, sans-serif; }
 /* Test-Auswahl als Pills */
@@ -168,7 +170,12 @@ if "grund" not in st.session_state:
     st.session_state["grund"] = {}
 
 # ---------------- Kopf ----------------
-st.image(os.path.join(os.path.dirname(__file__), "logo.jpg"), width=200)
+with open(os.path.join(os.path.dirname(__file__), "logo.jpg"), "rb") as _f:
+    _logo_b64 = base64.b64encode(_f.read()).decode()
+st.markdown(
+    f'<div class="logo-wrap"><img src="data:image/jpeg;base64,{_logo_b64}" alt="IK Industrievereinigung Kunststoffverpackungen e.V."></div>',
+    unsafe_allow_html=True,
+)
 st.markdown('<h1 class="ppwrtitle">PPWR-Rollenprüfung</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">Interaktive Ermittlung Ihrer Rolle nach der PPWR</p>', unsafe_allow_html=True)
 
