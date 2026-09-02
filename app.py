@@ -6,18 +6,23 @@ st.set_page_config(page_title="PPWR-Rollenprüfung", layout="centered")
 st.markdown("""
 <style>
 html, body, .stApp { font-family: Arial, sans-serif; }
-h1.ppwrtitle { color: #0055A4; text-align: center; margin-bottom: 0; }
-.subtitle { text-align: center; color: #5a6b7d; margin-top: 2px; }
+[data-testid="stImage"] { display: block; margin-left: auto !important; margin-right: auto !important; }
+h1.ppwrtitle { color: #004996; text-align: center; margin: 0.5rem 0 0; font-family: Arial, sans-serif; }
+.subtitle { text-align: center; color: #004996; margin-top: 2px; font-family: Arial, sans-serif; }
 /* Test-Auswahl als Pills */
 div[data-testid="stRadio"] > div { padding-top: 0; }
 div[data-testid="stRadio"] div[role="radiogroup"] { gap: 8px; flex-wrap: wrap; }
 div[data-testid="stRadio"] div[role="radiogroup"] label {
-  border: 1px solid #0055A4; border-radius: 20px; padding: 6px 16px;
-  color: #0055A4; background: #fff; position: relative; margin-right: 0;
+  border: 1px solid #004996; border-radius: 20px; padding: 6px 16px;
+  color: #004996; background: #fff; position: relative; margin-right: 0;
   cursor: pointer;
 }
 div[data-testid="stRadio"] div[role="radiogroup"] label:hover { background: #eaf2fb; }
-div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) { background: #0055A4; color: #fff; }
+div[data-testid="stRadio"] div[role="radiogroup"] label p { color: #004996; }
+div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) { background: #FF8C00; border-color: #FF8C00; color: #1a1a1a; }
+div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p,
+div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) span { color: #1a1a1a !important; }
+.hl { color: #FF8C00; font-weight: bold; }
 /* Hover-Infokasten (keine falschen Worttrennungen: Umbruch nur an Leerzeichen) */
 div[data-testid="stRadio"] div[role="radiogroup"] label::after {
   display: none; content: ""; white-space: pre-wrap; text-align: left;
@@ -32,15 +37,15 @@ div[data-testid="stRadio"] div[role="radiogroup"] label:nth-of-type(2):hover::af
 div[data-testid="stRadio"] div[role="radiogroup"] label:nth-of-type(3):hover::after { display: block; content: "Hersteller — Wer trägt die Abfallverantwortung (erweiterte Herstellerverantwortung) in dem EU-Mitgliedstaat, in dem die Verpackung zu Abfall wird? Kontext: Abfallverantwortliche."; }
 div[data-testid="stRadio"] div[role="radiogroup"] label:nth-of-type(4):hover::after { display: block; content: "Importeur / Vertreiber — Wann gehen die Erzeugerpflichten beim Inverkehrbringen auf Importeur oder Vertreiber über (eigener Name/eigene Marke oder konformitätsbeeinträchtigende Veränderung)? Kontext: Inverkehrbringen."; }
 .result { background:#E8F2FC; border:1px solid #b9d4ee; border-radius:8px; padding:16px 18px; margin:8px 0 4px; }
-.result h3 { margin:0 0 8px; color:#0055A4; font-size:12pt; }
+.result h3 { margin:0 0 8px; color:#004996; font-size:12pt; }
 .badge { display:inline-block; border-radius:12px; padding:3px 14px; font-weight:bold; font-size:10.5pt; }
-.badge-yes { background:#0055A4; color:#fff; }
+.badge-yes { background:#004996; color:#fff; }
 .badge-no { background:#dfe5ec; color:#5a6b7d; }
-.step { color:#0055A4; font-weight:bold; margin-bottom:4px; }
+.step { color:#004996; font-weight:bold; margin-bottom:4px; }
 .footnote { font-size:9.5pt; color:#5a6b7d; line-height:1.5; }
 .rolecard { border:1px solid #d7e6f7; border-radius:8px; padding:14px 10px; text-align:center; background:#f7fbff; }
 .rolecard .rname { font-weight:bold; margin-bottom:6px; }
-.st-ja { color:#0055A4; font-weight:bold; font-size:13pt; }
+.st-ja { color:#004996; font-weight:bold; font-size:13pt; }
 .st-nein { color:#8a99a8; font-weight:bold; font-size:13pt; }
 .st-offen { color:#b0bcc9; font-size:13pt; }
 .question { font-size:11.5pt; line-height:1.55; }
@@ -50,7 +55,7 @@ div[data-testid="stRadio"] div[role="radiogroup"] label:nth-of-type(4):hover::af
 # ---------------- Daten (Entscheidungsbäume, Originalwortlaut) ----------------
 TREES = {
     "lief": {
-        "title": "Bin ich LIEFERANT im Sinne der PPWR?",
+        "title": 'Bin ich <span class="hl">Lieferant</span> im Sinne der PPWR?',
         "intro": "„Lieferant“ ist jede natürliche oder juristische Person, die Verpackungen oder Verpackungsmaterial an einen Erzeuger liefert (Art. 3 Abs. 1 Nr. 16).",
         "start": "q1",
         "nodes": {
@@ -70,7 +75,7 @@ TREES = {
         ],
     },
     "a2": {
-        "title": "Wer ist ERZEUGER nach PPWR?",
+        "title": 'Wer ist <span class="hl">Erzeuger</span> nach PPWR?',
         "intro": "„Erzeuger“ ist derjenige natürliche oder juristische Person, die eine Verpackung oder ein verpacktes Produkt herstellt (Art. 3 Abs. 1 Nr. 13). Wegen Ausnahmen gilt für die Abgrenzung zum Lieferanten folgende Prüfreihenfolge:",
         "start": "q1",
         "nodes": {
@@ -99,7 +104,7 @@ TREES = {
         ],
     },
     "a3": {
-        "title": "Wer ist HERSTELLER nach PPWR?",
+        "title": 'Wer ist <span class="hl">Hersteller</span> nach PPWR?',
         "intro": "„Hersteller“ ist derjenige Erzeuger, Importeur oder Vertreiber in einem EU-Mitgliedstaat, der für die Verpackung verantwortlich ist, wenn sie dort zu Abfall wird. Dabei gilt folgende Prüfreihenfolge:",
         "start": "q1",
         "nodes": {
@@ -126,7 +131,7 @@ TREES = {
         ],
     },
     "a4": {
-        "title": "Wann ist ein Importeur oder Vertreiber ERZEUGER im Sinne der PPWR?",
+        "title": 'Wann ist ein Importeur oder Vertreiber <span class="hl">Erzeuger</span> im Sinne der PPWR?',
         "intro": "Wann die Erzeugerpflichten auf den Importeur oder Vertreiber nach Art. 21 übergehen, ergibt sich aus folgender Prüfreihenfolge:",
         "start": "q1",
         "nodes": {
@@ -163,9 +168,7 @@ if "grund" not in st.session_state:
     st.session_state["grund"] = {}
 
 # ---------------- Kopf ----------------
-cl, cc, cr = st.columns([1, 2, 1])
-with cc:
-    st.image(os.path.join(os.path.dirname(__file__), "logo.jpg"), width=240)
+st.image(os.path.join(os.path.dirname(__file__), "logo.jpg"), width=200)
 st.markdown('<h1 class="ppwrtitle">PPWR-Rollenprüfung</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">Interaktive Ermittlung Ihrer Rolle nach der PPWR</p>', unsafe_allow_html=True)
 
@@ -180,7 +183,7 @@ with st.expander("Definitionen der Rollen im Überblick"):
 def render_tree(key):
     t = TREES[key]
     s = st.session_state[key]
-    st.markdown(f"### {t['title']}")
+    st.markdown(f"### {t['title']}", unsafe_allow_html=True)
     st.write(t["intro"])
 
     if s["done"]:
@@ -277,7 +280,7 @@ def render_summary():
         t = TREES[k]
         done = st.session_state[k]["done"]
         txt = t["results"][done]["text"] if done else "Noch nicht geprüft."
-        st.markdown(f"**{t['title']}**")
+        st.markdown(f"**{t['title']}**", unsafe_allow_html=True)
         st.markdown(txt, unsafe_allow_html=True)
     st.markdown('<span class="footnote">Hinweis: Ein Unternehmen kann mehrere Rollen gleichzeitig einnehmen (z. B. Erzeuger und zusätzlich Hersteller in einem Mitgliedstaat).</span>', unsafe_allow_html=True)
 
