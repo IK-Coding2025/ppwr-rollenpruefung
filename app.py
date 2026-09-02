@@ -6,7 +6,7 @@ st.set_page_config(page_title="PPWR-Rollenprüfung", layout="centered")
 st.markdown("""
 <style>
 html, body, .stApp { font-family: Arial, sans-serif; }
-[data-testid="stImage"] { display: block; margin-left: auto !important; margin-right: auto !important; }
+[data-testid="stImage"] { display: block; margin-left: auto !important; margin-right: auto !important; width: 200px !important; }
 h1.ppwrtitle { color: #004996; text-align: center; margin: 0.5rem 0 0; font-family: Arial, sans-serif; }
 .subtitle { text-align: center; color: #004996; margin-top: 2px; font-family: Arial, sans-serif; }
 /* Test-Auswahl als Pills */
