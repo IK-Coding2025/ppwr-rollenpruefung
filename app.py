@@ -149,8 +149,6 @@ TREES = {
         },
         "footnotes": [
             "* Kleinstunternehmen: weniger als 10 Mitarbeiter (berechnet als Jahresarbeitseinheiten) und Jahresumsatz von höchstens 2 Mio. € oder Jahresbilanzsumme von höchstens 2 Mio. €.",
-            "<em>Importeur</em> ist jede in der EU ansässige natürliche oder juristische Person, die Verpackungen <em>aus einem Drittland</em> (d.h. von außerhalb der EU) erstmals in der EU bereitstellt.",
-            "<em>Vertreiber</em> ist jede natürliche oder juristische Person in der Lieferkette, die Verpackungen auf dem EU-Markt bereitstellt, mit Ausnahme des Erzeugers oder des Importeurs.",
         ],
     },
 }
