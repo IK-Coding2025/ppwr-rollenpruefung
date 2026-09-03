@@ -21,10 +21,10 @@ div[data-testid="stRadio"] div[role="radiogroup"] label {
 }
 div[data-testid="stRadio"] div[role="radiogroup"] label:hover { background: #eaf2fb; }
 div[data-testid="stRadio"] div[role="radiogroup"] label p { color: #004996; }
-div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) { background: #FF8C00; border-color: #FF8C00; color: #1a1a1a; }
+div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) { background: #004996; border-color: #004996; color: #ffffff; }
 div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) p,
-div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) span { color: #1a1a1a !important; }
-.hl { color: #FF8C00; font-weight: bold; }
+div[data-testid="stRadio"] div[role="radiogroup"] label:has(input:checked) span { color: #ffffff !important; }
+.hl { color: #004996; font-weight: bold; }
 /* Hover-Infokasten (keine falschen Worttrennungen: Umbruch nur an Leerzeichen) */
 div[data-testid="stRadio"] div[role="radiogroup"] label::after {
   display: none; content: ""; white-space: pre-wrap; text-align: left;
