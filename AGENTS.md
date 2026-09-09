@@ -1,6 +1,6 @@
 # PPWR-Rollenprüfung – Streamlit App
 
-Interaktive Ermittlung der PPWR-Rolle (Lieferant, Erzeuger, Hersteller, Importeur/Vertreiber als Erzeuger, Gesamtergebnis).
+Interaktive Ermittlung der PPWR-Rolle (Lieferant, Erzeuger, Hersteller, Importeur/Vertreiber als Erzeuger).
 Quelle: IK-Mitteilung „Mitteilung zu den wichtigsten Rollen in der PPWR“ vom 13. März 2026.
 
 ## Lokal starten

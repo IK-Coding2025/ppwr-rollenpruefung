@@ -241,42 +241,10 @@ def render_tree(key):
     for fn in t["footnotes"]:
         st.markdown(f'<span class="footnote">{fn}</span>', unsafe_allow_html=True)
 
-def compute_roles():
-    roles = []
-    a2 = TREES["a2"]["results"][st.session_state["a2"]["done"]] if st.session_state["a2"]["done"] else None
-    a4 = TREES["a4"]["results"][st.session_state["a4"]["done"]] if st.session_state["a4"]["done"] else None
-    a3 = TREES["a3"]["results"][st.session_state["a3"]["done"]] if st.session_state["a3"]["done"] else None
-    lief = TREES["lief"]["results"][st.session_state["lief"]["done"]] if st.session_state["lief"]["done"] else None
-
-    erz = "Ja" if (a2 and a2["value"]) or (a4 and a4["value"]) else ("Nein" if (a2 or a4) else "offen")
-    roles.append(("Erzeuger", erz))
-    her = ("Ja" if a3["value"] else "Nein") if a3 else "offen"
-    roles.append(("Hersteller", her))
-    lf = ("Ja" if lief["value"] else "Nein") if lief else "offen"
-    roles.append(("Lieferant", lf))
-    return roles
-
-def render_summary():
-    st.markdown("### Gesamtergebnis – Ihre Rollen nach PPWR")
-    roles = compute_roles()
-    cols = st.columns(len(roles))
-    for col, (label, status) in zip(cols, roles):
-        cls = "st-ja" if status == "Ja" else ("st-nein" if status == "Nein" else "st-offen")
-        with col:
-            st.markdown(f'<div class="rolecard"><div class="rname">{label}</div><div class="status {cls}">{status}</div></div>', unsafe_allow_html=True)
-    st.markdown("#### Begründungen")
-    for k in ("lief", "a2", "a3", "a4"):
-        t = TREES[k]
-        done = st.session_state[k]["done"]
-        txt = t["results"][done]["text"] if done else "Noch nicht geprüft."
-        st.markdown(f"**{t['title']}**", unsafe_allow_html=True)
-        st.markdown(txt, unsafe_allow_html=True)
-    st.markdown('<span class="footnote">Hinweis: Ein Unternehmen kann mehrere Rollen gleichzeitig einnehmen (z. B. Erzeuger und zusätzlich Hersteller in einem Mitgliedstaat).</span>', unsafe_allow_html=True)
-
 # ---------------- Auswahl & Inhalt ----------------
 sel = st.radio(
     "Rollenprüfung wählen",
-    ["Lieferant", "Erzeuger", "Hersteller", "Importeur/Vertreiber als Erzeuger", "Gesamtergebnis"],
+    ["Lieferant", "Erzeuger", "Hersteller", "Importeur/Vertreiber als Erzeuger"],
     horizontal=True,
     label_visibility="collapsed",
     key="active_test",
@@ -290,8 +258,6 @@ elif sel == "Hersteller":
     render_tree("a3")
 elif sel == "Importeur/Vertreiber als Erzeuger":
     render_tree("a4")
-else:
-    render_summary()
 
 st.markdown("---")
 st.caption("Quelle: IK-Mitteilung „Mitteilung zu den wichtigsten Rollen in der PPWR“ vom 13. März 2026. Die Angaben stehen unter dem Vorbehalt angekündigter Veröffentlichungen der EU-Kommission und der nationalen Verpackungsregister.")
