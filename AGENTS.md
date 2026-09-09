@@ -1,6 +1,6 @@
 # PPWR-Rollenprüfung – Streamlit App
 
-Interaktive Ermittlung der PPWR-Rolle (Lieferant, Erzeuger, Hersteller, Importeur/Vertreiber als Erzeuger, Grundrollen, Gesamtergebnis).
+Interaktive Ermittlung der PPWR-Rolle (Lieferant, Erzeuger, Hersteller, Importeur/Vertreiber als Erzeuger, Gesamtergebnis).
 Quelle: IK-Mitteilung „Mitteilung zu den wichtigsten Rollen in der PPWR“ vom 13. März 2026.
 
 ## Lokal starten
@@ -21,7 +21,7 @@ streamlit run app.py
 - Schrift: Arial
 
 ## Dateien
-- `app.py` – komplette App (Entscheidungsbäume in `TREES`, Grundrollen in `GRUND`)
+- `app.py` – komplette App (Entscheidungsbäume in `TREES`)
 - `logo.jpg` – IK-Logo (wird base64-eingebettet zentriert, 200 px)
 - `.streamlit/config.toml` – Theme (primaryColor #004996)
 - `requirements.txt` – `streamlit>=1.40,<2`

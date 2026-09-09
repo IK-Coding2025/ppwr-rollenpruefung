@@ -51,6 +51,19 @@ div[data-testid="stRadio"] div[role="radiogroup"] label:nth-of-type(4):hover::af
 .st-nein { color:#8a99a8; font-weight:bold; font-size:13pt; }
 .st-offen { color:#b0bcc9; font-size:13pt; }
 .question { font-size:11.5pt; line-height:1.55; }
+/* Antwort-Buttons: Hover und Auswahl einheitlich blau */
+div[data-testid="stButton"] button {
+  border: 1px solid #004996 !important;
+  color: #004996 !important;
+  background: #ffffff !important;
+}
+div[data-testid="stButton"] button:hover,
+div[data-testid="stButton"] button:active,
+div[data-testid="stButton"] button:focus {
+  color: #ffffff !important;
+  background: #004996 !important;
+  border-color: #004996 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -153,10 +166,6 @@ TREES = {
     },
 }
 
-GRUND = [
-    {"key": "importeur", "label": "Importeur", "q": "Stellen Sie als <strong>in der EU ansässige</strong> Person Verpackungen <strong>aus einem Drittland</strong> (d.h. von außerhalb der EU) <strong>erstmals in der EU</strong> bereit?", "note": "Importeur ist jede in der EU ansässige natürliche oder juristische Person, die Verpackungen aus einem Drittland erstmals in der EU bereitstellt (Art. 3 Abs. 1 Nr. 17)."},
-    {"key": "vertreiber", "label": "Vertreiber", "q": "Stellen Sie Verpackungen auf dem <strong>EU-Markt</strong> bereit, <strong>ohne Erzeuger oder Importeur</strong> zu sein?", "note": "Vertreiber ist jede natürliche oder juristische Person in der Lieferkette, die Verpackungen auf dem EU-Markt bereitstellt, mit Ausnahme des Erzeugers oder des Importeurs (Art. 3 Abs. 1 Nr. 18)."},
-]
 
 ROLE_LABELS = {"erzeuger": "Erzeuger", "hersteller": "Hersteller", "lieferant": "Lieferant"}
 
@@ -164,8 +173,7 @@ ROLE_LABELS = {"erzeuger": "Erzeuger", "hersteller": "Hersteller", "lieferant": 
 for k in ("lief", "a2", "a3", "a4"):
     if k not in st.session_state:
         st.session_state[k] = {"node": TREES[k]["start"], "hist": [], "done": None}
-if "grund" not in st.session_state:
-    st.session_state["grund"] = {}
+
 
 # ---------------- Kopf ----------------
 with open(os.path.join(os.path.dirname(__file__), "logo.jpg"), "rb") as _f:
@@ -211,7 +219,7 @@ def render_tree(key):
         st.markdown(f'<div class="question">{node["q"]}</div>', unsafe_allow_html=True)
         cy, cn, cb, _ = st.columns([1, 1, 1.2, 4])
         with cy:
-            ja = st.button("Ja", key=f"{key}_ja_{len(s['hist'])}", type="primary")
+            ja = st.button("Ja", key=f"{key}_ja_{len(s['hist'])}")
         with cn:
             nein = st.button("Nein", key=f"{key}_nein_{len(s['hist'])}")
         with cb:
@@ -233,27 +241,6 @@ def render_tree(key):
     for fn in t["footnotes"]:
         st.markdown(f'<span class="footnote">{fn}</span>', unsafe_allow_html=True)
 
-def render_grund():
-    st.markdown("### Grundrollen: Importeur und Vertreiber")
-    st.write("Diese beiden Rollen ergeben sich direkt aus den Definitionen der PPWR (Art. 3 Abs. 1 Nr. 17–18) und sind unabhängig von den Entscheidungsbäumen zu beantworten.")
-    for g in GRUND:
-        v = st.session_state["grund"].get(g["key"])
-        status = "offen" if v is None else ("Ja" if v else "Nein")
-        badge_cls = "badge-yes" if v else "badge-no"
-        st.markdown(f'<div class="question">{g["q"]}</div>', unsafe_allow_html=True)
-        cy, cn, _ = st.columns([1, 1, 6])
-        with cy:
-            if st.button("Ja", key=f"grund_{g['key']}_ja", type="primary"):
-                st.session_state["grund"][g["key"]] = True
-                st.rerun()
-        with cn:
-            if st.button("Nein", key=f"grund_{g['key']}_nein"):
-                st.session_state["grund"][g["key"]] = False
-                st.rerun()
-        st.markdown(f'Rolle „{g["label"]}“: <span class="badge {badge_cls}">{status}</span>', unsafe_allow_html=True)
-        st.markdown(f'<span class="footnote">{g["note"]}</span>', unsafe_allow_html=True)
-        st.divider()
-
 def compute_roles():
     roles = []
     a2 = TREES["a2"]["results"][st.session_state["a2"]["done"]] if st.session_state["a2"]["done"] else None
@@ -267,9 +254,6 @@ def compute_roles():
     roles.append(("Hersteller", her))
     lf = ("Ja" if lief["value"] else "Nein") if lief else "offen"
     roles.append(("Lieferant", lf))
-    for g in GRUND:
-        v = st.session_state["grund"].get(g["key"])
-        roles.append((g["label"], "offen" if v is None else ("Ja" if v else "Nein")))
     return roles
 
 def render_summary():
@@ -292,7 +276,7 @@ def render_summary():
 # ---------------- Auswahl & Inhalt ----------------
 sel = st.radio(
     "Rollenprüfung wählen",
-    ["Lieferant", "Erzeuger", "Hersteller", "Importeur/Vertreiber als Erzeuger", "Grundrollen", "Gesamtergebnis"],
+    ["Lieferant", "Erzeuger", "Hersteller", "Importeur/Vertreiber als Erzeuger", "Gesamtergebnis"],
     horizontal=True,
     label_visibility="collapsed",
     key="active_test",
@@ -306,8 +290,6 @@ elif sel == "Hersteller":
     render_tree("a3")
 elif sel == "Importeur/Vertreiber als Erzeuger":
     render_tree("a4")
-elif sel == "Grundrollen":
-    render_grund()
 else:
     render_summary()
 
