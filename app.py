@@ -1,5 +1,7 @@
 import base64
+import html
 import os
+import re
 import streamlit as st
 
 st.set_page_config(page_title="PPWR-Rollenprüfung", layout="centered")
@@ -53,6 +55,17 @@ div[data-testid="stRadio"] div[role="radiogroup"] label:nth-of-type(4):hover::af
 .st-nein { color:#8a99a8; font-weight:bold; font-size:13pt; }
 .st-offen { color:#b0bcc9; font-size:13pt; }
 .question { font-size:11.5pt; line-height:1.55; }
+.example-box { background:#f7fbff; border:1px dashed #b9d4ee; border-radius:8px; padding:10px 14px; margin:10px 0 0; font-size:10.5pt; line-height:1.5; color:#3a4a58; }
+/* Begriffs-Tooltips (Verpackung / Verpackungsmaterial) in den Fragen */
+.term-tip { border-bottom: 1px dotted #004996; cursor: help; position: relative; }
+.term-tip::after {
+  content: attr(data-tip); display: none; white-space: pre-wrap; text-align: left;
+  position: absolute; top: 130%; left: 0; width: 320px; max-width: 80vw;
+  background: #E8F2FC; border: 1px solid #b9d4ee; border-radius: 8px;
+  padding: 12px 14px; color: #1a1a1a; font-size: 9.5pt; line-height: 1.5;
+  font-weight: normal; z-index: 9999; box-shadow: 0 2px 8px rgba(0,60,120,.15);
+}
+.term-tip:hover::after { display: block; }
 .intro-box { background:#E8F2FC; border:1px solid #b9d4ee; border-radius:8px; padding:16px 20px; margin:4px 0 16px; font-size:11pt; line-height:1.6; color:#1a1a1a; }
 .intro-box p { margin:0 0 10px; }
 .intro-box p:last-child { margin-bottom:0; }
@@ -81,7 +94,7 @@ TREES = {
         "start": "q1",
         "nodes": {
             "q1": {"short": "Lieferung von Verpackungen/Material", "q": "Liefern Sie <strong>Verpackungen</strong> oder <strong>Verpackungsmaterial</strong>?", "yes": "q2", "no": "res_kein1"},
-            "q2": {"short": "Lieferung an Erzeuger", "q": "Liefern Sie die Verpackungen oder das Verpackungsmaterial an einen <strong>Erzeuger</strong> (Art. 3 Abs. 1 Nr. 13 PPWR)?", "yes": "res_ja", "no": "q3"},
+            "q2": {"short": "Lieferung an Erzeuger", "q": "Liefern Sie die Verpackungen oder das Verpackungsmaterial an einen <strong>Erzeuger</strong> (Art. 3 Abs. 1 Nr. 13 PPWR)?", "yes": "res_ja", "no": "q3", "example": "Beispiel: Sie liefern „Bauteile“ der Verpackung – z. B. eine Folienrolle, die Ihr Kunde erst noch zu einem Beutel formt und dann befüllt. Ihr Kunde macht daraus also erst die fertige, gefüllte Verpackung. Oder Sie liefern fertige, aber noch leere Verpackungen – z. B. Joghurtbecher oder Flaschen, die Ihr Kunde abfüllt und dann als sein Produkt in den Verkehr bringt."},
             "q3": {"short": "Andere Kunden / Drittstaaten", "q": "Liefern Sie an <strong>andere Kunden</strong>, z. B. <strong>Händler/Vertreiber</strong> (sofern diese nicht als Erzeuger handeln) oder an <strong>Abnehmer in Drittstaaten</strong>?", "yes": "res_kein2", "no": "res_pruef"},
         },
         "results": {
@@ -100,14 +113,14 @@ TREES = {
         "intro": "„Erzeuger“ ist derjenige natürliche oder juristische Person, die eine Verpackung oder ein verpacktes Produkt herstellt (Art. 3 Abs. 1 Nr. 13). Wegen Ausnahmen gilt für die Abgrenzung zum Lieferanten folgende Prüfreihenfolge:",
         "start": "q1",
         "nodes": {
-            "q1": {"short": "Markeninhaber", "q": "Lässt eine Person A (1.) eine <strong>Verpackung</strong> (nicht Verpackungsmaterial) oder ein verpacktes Produkt unter ihrem <strong>Namen</strong> oder ihrer <strong>Marke</strong> (durch eine Person B) entwickeln oder herstellen und (2.) stellt Person A diese/s erstmals in der EU bereit? (= <strong>Markeninhaber</strong>)", "yes": "q2", "no": "r1"},
+            "q1": {"short": "Markeninhaber", "q": "Lässt eine Person A (1.) eine <strong>Verpackung</strong> (nicht Verpackungsmaterial) oder ein verpacktes Produkt unter ihrem <strong>Namen</strong> oder ihrer <strong>Marke</strong> (durch eine Person B) entwickeln oder herstellen und (2.) stellt Person A diese/s erstmals in der EU bereit? (= <strong>Markeninhaber</strong>)", "yes": "q2", "no": "r1", "example": "Beispiel: Eine Supermarktkette (A) verkauft Joghurt unter ihrer Eigenmarke. Den Joghurtbecher lässt die Supermarktkette (A) von einem Lohnabfüller (B) herstellen und befüllen – auf dem Becher steht der Name der Supermarktkette. Die Supermarktkette bringt den befüllten Becher erstmals in der EU in Verkehr."},
             "q2": {"short": "Kleinstunternehmen", "q": "Ist der <em>Markeninhaber</em> (Person A) ein <strong>Kleinstunternehmen</strong>*?", "yes": "q3", "no": "res_mi_13a"},
-            "q3": {"short": "Person B liefert Verpackungen", "q": "Liefert Person B <strong>Verpackungen</strong> (nicht Verpackungsmaterial) an den Markeninhaber (Person A)?", "yes": "q4", "no": "r2"},
+            "q3": {"short": "Person B liefert Verpackungen", "q": "Liefert Person B <strong>Verpackungen</strong> (nicht Verpackungsmaterial) an den Markeninhaber (Person A)?", "yes": "q4", "no": "r2", "example": "Beispiel: Person B, ein Kunststoffverpackungsproduzent, fertigt fertig geformte, bedruckte Müslibeutel – keine Folienrollen (also Verpackungen, nicht bloß Verpackungsmaterial). Person B liefert diese Beutel an den Markeninhaber Person A, den Familienbetrieb, der sie befüllt und erstmals in der EU in Verkehr bringt."},
             "q4": {"short": "Selber Mitgliedstaat", "q": "Sind <strong>Markeninhaber</strong> und <strong>Lieferant</strong> der Verpackung <strong>im selben EU-Mitgliedstaat</strong> ansässig?", "yes": "res_lief_13b", "no": "q5"},
             "q5": {"short": "Lieferant in EU", "q": "Ist der <strong>Lieferant der Verpackung</strong> in der <strong>EU</strong> ansässig?", "yes": "res_art15", "no": "res_mi_rueck"},
             "r1": {"short": "Leere Verkaufs-/Umverpackung", "q": "Stellt eine Person eine <strong>leere Verkaufsverpackung</strong> oder <strong>leere Umverpackung</strong> erstmals in der EU bereit?", "yes": "res_material", "no": "r2"},
-            "r2": {"short": "Abfüller", "q": "Stellt eine Person eine <strong>mit einem Produkt befüllte Verkaufsverpackung</strong> oder eine <strong>mit Verkaufseinheiten befüllte Umverpackung</strong> erstmals in der EU bereit? (= Abfüller)", "yes": "res_abfueller", "no": "r3"},
-            "r3": {"short": "Transportverpackung", "q": "Stellt eine Person eine <strong>Transportverpackung</strong>, inkl. Verpackungen für den elektr. Handel, <strong>Serviceverpackung</strong> oder Primärproduktionsverpackungen in ihrer <strong>endgültigen Form</strong> und <strong>unbefüllt</strong> erstmals in der EU bereit?", "yes": "res_produzent", "no": "res_keinend"},
+            "r2": {"short": "Abfüller", "q": "Stellt eine Person eine <strong>mit einem Produkt befüllte Verkaufsverpackung</strong> oder eine <strong>mit Verkaufseinheiten befüllte Umverpackung</strong> erstmals in der EU bereit? (= Abfüller)", "yes": "res_abfueller", "no": "r3", "example": "Beispiel: Ein Reinigungsmittel-Hersteller kauft leere Kunststoffflaschen zu, füllt sie mit seinem Allzweckreiniger und liefert die befüllten Flaschen erstmals in der EU an den Handel – unter eigenem Namen, ohne dass ein Markeninhaber im Hintergrund steht, der ihn beauftragt hätte."},
+            "r3": {"short": "Transportverpackung", "q": "Stellt eine Person eine <strong>Transportverpackung</strong>, inkl. Verpackungen für den elektr. Handel, <strong>Serviceverpackung</strong> oder Primärproduktionsverpackungen in ihrer <strong>endgültigen Form</strong> und <strong>unbefüllt</strong> erstmals in der EU bereit?", "yes": "res_produzent", "no": "res_keinend", "example": "Beispiel: Ein Unternehmen produziert starre Kunststoff-Transportkisten und verkauft diese leer an einen Obsthändler, der sie dann mit Äpfeln befüllt und zur Lieferung nutzt. Die Kisten verlassen die Produktion bereits in ihrer endgültigen Form – sie werden beim Obsthändler nicht mehr umgeformt, sondern nur noch befüllt."},
         },
         "results": {
             "res_material": {"text": "Lieferant von Verpackungsmaterial, d.h. kein „Erzeuger“, Art. 3 Abs. 1 Nr. 5-6", "role": "erzeuger", "value": False},
@@ -175,6 +188,118 @@ TREES = {
 
 ROLE_LABELS = {"erzeuger": "Erzeuger", "hersteller": "Hersteller", "lieferant": "Lieferant"}
 
+# ---------------- Begriffs-Tooltips (Verpackung / Verpackungsmaterial) ----------------
+# Kurzerläuterungen auf Basis der Grafiken "IK_Verpackungsdefinition.png" und
+# "IK_Verpackungsmaterialien_vs_Verpackung.png".
+TERM_TIPS = {
+    "Verpackungsmaterial": (
+        "„Verpackungsmaterial“: Vorprodukte, aus denen erst eine Verpackung entsteht – "
+        "Vorformen (z. B. Folien auf Rolle, Preforms), Verpackungsbestandteile (z. B. Deckel, "
+        "Etiketten) oder Packhilfsmittel (z. B. Klebstoffe, Umreifungen)."
+    ),
+    "Verpackung": (
+        "„Verpackung“: die fertige Verpackungseinheit in ihrer endgültigen Form – inkl. "
+        "integrierter Bestandteile (untrennbar, z. B. Schraubverschluss) und separater "
+        "Bestandteile (abtrennbar, z. B. Siegel). Entsteht durch Zusammensetzung aller "
+        "Bestandteile, ggf. inkl. Befüllung."
+    ),
+    # Rollen (siehe Expander "Definitionen der Rollen im Überblick")
+    "Lieferant": (
+        "„Lieferant“ ist, wer Verpackungen oder Verpackungsmaterial an einen Erzeuger liefert. Er "
+        "muss dem Erzeuger alle Informationen und Unterlagen zur Verfügung stellen, die dieser zum "
+        "Nachweis der Konformität der Verpackungen benötigt."
+    ),
+    "Erzeuger": (
+        "„Erzeuger“ ist, wer eine Verpackung oder ein verpacktes Produkt unter eigenem Namen oder "
+        "eigener Marke entwickeln oder herstellen lässt oder selbst herstellt, um diese/s in der EU "
+        "in Verkehr zu bringen. Der Erzeuger muss die Konformität der Verpackung nachweisen."
+    ),
+    "Hersteller": (
+        "„Hersteller“ ist der Erzeuger, Importeur oder Vertreiber, der in dem EU-Mitgliedstaat, in "
+        "dem die Verpackung zu Abfall wird, für diese verantwortlich ist. Er registriert sich im "
+        "nationalen Register, meldet jährlich die in Verkehr gebrachten Mengen und trägt die "
+        "erweiterte Herstellerverantwortung."
+    ),
+    "Importeur": (
+        "„Importeur“ ist jede in der EU ansässige natürliche oder juristische Person, die "
+        "Verpackungen aus einem Drittland (d. h. von außerhalb der EU) erstmals in der EU "
+        "bereitstellt."
+    ),
+    "Vertreiber": (
+        "„Vertreiber“ ist jede natürliche oder juristische Person in der Lieferkette, die "
+        "Verpackungen auf dem EU-Markt bereitstellt, mit Ausnahme des Erzeugers oder des "
+        "Importeurs. Vertreiber müssen die Einhaltung der Vorgaben durch Erzeuger, Importeure und "
+        "Hersteller überprüfen."
+    ),
+    # Verpackungsarten (siehe Expander "Grundlegende Verpackungsarten nach PPWR")
+    "Verkaufsverpackung": (
+        "„Verkaufsverpackung“ (Primär-/Erstverpackung): bildet für den Endabnehmer in der "
+        "Verkaufsstelle eine Verkaufseinheit aus Produkt und Verpackung (Art. 3 Abs. 1 Nr. 5 PPWR), "
+        "z. B. eine Shampoo-Flasche. Unbefüllt handelt es sich nur um Verpackungsmaterial."
+    ),
+    "Umverpackung": (
+        "„Umverpackung“ (Sekundär-/Zweitverpackung): fasst in der Verkaufsstelle mehrere "
+        "Verkaufseinheiten zusammen und lässt sich entfernen, ohne die Produkteigenschaften zu "
+        "beeinträchtigen (Art. 3 Abs. 1 Nr. 6 PPWR). Unbefüllt ist sie Verpackungsmaterial."
+    ),
+    "Transportverpackung": (
+        "„Transportverpackung“ (Tertiär-/Drittverpackung): erleichtert Handhabung und Transport "
+        "einer oder mehrerer Verkaufseinheiten, ausgenommen Container für Straßen-, Schienen-, See- "
+        "oder Luftverkehr (Art. 3 Abs. 1 Nr. 7 PPWR). Gilt bereits leer als Verpackung."
+    ),
+    "Serviceverpackung": (
+        "„Serviceverpackung“ ist eine Unterart der Verkaufsverpackung: für die Befüllung an der "
+        "Verkaufsstelle zur Übergabe des Produkts konzipiert (Art. 3 Abs. 1 Nr. 1d) PPWR), z. B. "
+        "Tragetaschen oder Coffee-to-go-Becher. Gilt bereits leer als Verpackung."
+    ),
+    "E-Commerce-Verpackung": (
+        "„Verpackungen für den elektronischen Handel“ sind eine Unterart der Transportverpackung: "
+        "für die Lieferung von Produkten aus Online-/Fernabsatzgeschäften direkt an Endabnehmer "
+        "(Art. 3 Abs. 1 Nr. 8 PPWR), z. B. Versandkartons, Versandtaschen, Polsterverpackungen."
+    ),
+    "Primärproduktionsverpackung": (
+        "„Primärproduktionsverpackung“: Verpackung für unverarbeitete Erzeugnisse aus der "
+        "Primärproduktion, z. B. Getreide, Obst, Gemüse, Fleisch, Milch, Eier oder Fisch "
+        "(Art. 3 Abs. 1 Nr. 4 PPWR). Der erste Bereitsteller gilt als Hersteller."
+    ),
+}
+
+# Reihenfolge wichtig: spezifischere/längere Ausdrücke zuerst, damit z. B. "Verpackungen für den
+# elektr. Handel" nicht schon durch "Verpackung(en)" verkürzt erkannt wird.
+_TERM_TIP_PATTERNS = [
+    (r"Verpackungsmaterial(?:ien|s)?", "Verpackungsmaterial"),
+    (r"Verpackungen für den elektr(?:\.|onischen) Handel", "E-Commerce-Verpackung"),
+    (r"Primärproduktionsverpackung(?:en)?", "Primärproduktionsverpackung"),
+    (r"Verkaufsverpackung(?:en)?", "Verkaufsverpackung"),
+    (r"Umverpackung(?:en)?", "Umverpackung"),
+    (r"Transportverpackung(?:en)?", "Transportverpackung"),
+    (r"Serviceverpackung(?:en)?", "Serviceverpackung"),
+    (r"Verpackung(?:en)?", "Verpackung"),
+    (r"Lieferant(?:en)?", "Lieferant"),
+    (r"Erzeuger[n]?", "Erzeuger"),
+    (r"Hersteller[n]?", "Hersteller"),
+    (r"Importeur(?:e|en)?", "Importeur"),
+    (r"Vertreiber[n]?", "Vertreiber"),
+]
+_TERM_TIP_PATTERN = re.compile(
+    r"(?<![A-Za-zÄÖÜäöüß])(" + "|".join(p for p, _ in _TERM_TIP_PATTERNS) + r")(?![A-Za-zÄÖÜäöüß])"
+)
+_TERM_TIP_LOOKUP = [(re.compile(p + "$"), key) for p, key in _TERM_TIP_PATTERNS]
+
+
+def highlight_terms(text):
+    """Unterlegt Begriffe aus TERM_TIPS (Rollen und Verpackungsarten, inkl. Pluralformen) in
+    Fragetexten mit einem Hover-Tooltip, der sie anhand der Definitionen aus den Info-Expandern
+    kurz erläutert."""
+
+    def _wrap(m):
+        word = m.group(1)
+        key = next(key for pattern, key in _TERM_TIP_LOOKUP if pattern.match(word))
+        tip = html.escape(TERM_TIPS[key], quote=True)
+        return f'<span class="term-tip" data-tip="{tip}">{word}</span>'
+
+    return _TERM_TIP_PATTERN.sub(_wrap, text)
+
 # ---------------- State ----------------
 for k in ("lief", "a2", "a3", "a4"):
     if k not in st.session_state:
@@ -241,6 +366,60 @@ with st.expander("Definitionen Verpackung und Verpackungsmaterial im Überblick"
                 key=f"download_{_img_file}",
             )
 
+with st.expander("Grundlegende Verpackungsarten nach PPWR"):
+    st.markdown(
+        "Die PPWR unterscheidet drei grundlegende Verpackungsarten – **Verkaufsverpackungen**, "
+        "**Umverpackungen** und **Transportverpackungen**. Diese drei Arten sind abschließend und "
+        "bilden den gesamten Verpackungsmarkt ab. **Serviceverpackungen**, **E-Commerce-Verpackungen** "
+        "und **Primärproduktionsverpackungen** sind besondere Unterarten davon."
+    )
+    st.markdown(
+        "**Verkaufsverpackungen** (Primär- bzw. Erstverpackungen) sind Verpackungen, die für den "
+        "Endabnehmer in der Verkaufsstelle eine Verkaufseinheit aus Produkt und Verpackung bilden "
+        "(Art. 3 Abs. 1 Nr. 5 PPWR), z. B. eine Shampoo-Flasche. Sie werden erst durch die Befüllung "
+        "mit einem Produkt zur Verpackung – unbefüllt handelt es sich um Verpackungsmaterial."
+    )
+    st.markdown(
+        "**Umverpackungen** (Sekundär- bzw. Zweitverpackungen) fassen in der Verkaufsstelle mehrere "
+        "Verkaufseinheiten zusammen – zur Abgabe an Endabnehmer, zur Regalauffüllung oder als Lager- "
+        "bzw. Vertriebseinheit – und lassen sich entfernen, ohne die Produkteigenschaften zu "
+        "beeinträchtigen (Art. 3 Abs. 1 Nr. 6 PPWR). Auch hier gilt: Nur befüllt sind sie Verpackungen, "
+        "leer sind sie Verpackungsmaterial."
+    )
+    st.markdown(
+        "**Transportverpackungen** (Tertiär- bzw. Drittverpackungen) erleichtern die Handhabung und den "
+        "Transport von einer oder mehreren Verkaufseinheiten und verhindern Transportschäden – "
+        "ausgenommen Container für den Straßen-, Schienen-, See- oder Luftverkehr (Art. 3 Abs. 1 Nr. 7 "
+        "PPWR). Bei ihnen ist die Erzeuger- (und ggf. Hersteller-)Verantwortung vorverlagert: Sie gelten "
+        "bereits im leeren Zustand als Verpackung."
+    )
+    st.markdown(
+        "**Serviceverpackungen** sind eine Unterart der Verkaufsverpackung: Gegenstände, die für die "
+        "Befüllung an der Verkaufsstelle zur Übergabe des Produkts konzipiert und vorgesehen sind "
+        "(Art. 3 Abs. 1 Nr. 1d) PPWR), z. B. Papier- und Kunststofftragetaschen oder Folien für "
+        "gereinigte Kleidungsstücke. Ein Spezialfall sind Verpackungen zum Mitnehmen, z. B. "
+        "Coffee-to-go-Becher oder Pizzakartons. Wie Transportverpackungen gelten Serviceverpackungen "
+        "bereits leer als Verpackung."
+    )
+    st.markdown(
+        "**Verpackungen für den elektronischen Handel (E-Commerce-Verpackungen)** sind eine Unterart der "
+        "Transportverpackung: Sie werden für die Lieferung von Produkten aus Online- oder anderen "
+        "Fernabsatzgeschäften direkt an den Endabnehmer verwendet (Art. 3 Abs. 1 Nr. 8 PPWR), z. B. "
+        "Versandkartons und Versandtaschen für Online-Bestellungen, Polsterverpackungen und andere "
+        "spezielle Verpackungen für zerbrechliche Waren im Fernabsatz. Anders als sonstige "
+        "Transportverpackungen unterliegen sie der harmonisierten Kennzeichnungspflicht (Art. 12 PPWR)."
+    )
+    st.markdown(
+        "**Primärproduktionsverpackungen** sind Gegenstände, die als Verpackung für unverarbeitete "
+        "Erzeugnisse aus der Primärproduktion gestaltet und bestimmt sind (Art. 3 Abs. 1 Nr. 4 PPWR), "
+        "z. B. für Getreide, Obst, Gemüse, Fleisch, Milch, Eier oder Fisch. Der Begriff dient vor allem "
+        "der Bestimmung des Herstellers und erweitert den Verpackungsbegriff nicht: Wie bei "
+        "Transportverpackungen ist die Herstellerverantwortung vorverlagert, d. h. schon derjenige, der "
+        "diese Verpackung erstmals bereitstellt (z. B. der Verpackungshersteller oder -abfüller), gilt "
+        "als Hersteller nach der PPWR – nicht erst die Landwirtinnen und Landwirte, die sie später zur "
+        "Verpackung ihrer Erzeugnisse verwenden."
+    )
+
 # ---------------- Assistent ----------------
 def render_tree(key):
     t = TREES[key]
@@ -265,7 +444,9 @@ def render_tree(key):
         if s["hist"]:
             st.caption("   ·   ".join(f"{i+1}. {h['short']}: {'Ja' if h['a'] else 'Nein'}" for i, h in enumerate(s["hist"])))
         st.markdown(f'<div class="step">Frage {len(s["hist"]) + 1}</div>', unsafe_allow_html=True)
-        st.markdown(f'<div class="question">{node["q"]}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div class="question">{highlight_terms(node["q"])}</div>', unsafe_allow_html=True)
+        if node.get("example"):
+            st.markdown(f'<div class="example-box">{node["example"]}</div>', unsafe_allow_html=True)
         cy, cn, cb, _ = st.columns([1, 1, 1.2, 4])
         with cy:
             ja = st.button("Ja", key=f"{key}_ja_{len(s['hist'])}")
