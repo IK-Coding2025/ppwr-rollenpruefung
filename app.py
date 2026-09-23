@@ -51,6 +51,10 @@ div[data-testid="stRadio"] div[role="radiogroup"] label:nth-of-type(4):hover::af
 .st-nein { color:#8a99a8; font-weight:bold; font-size:13pt; }
 .st-offen { color:#b0bcc9; font-size:13pt; }
 .question { font-size:11.5pt; line-height:1.55; }
+.intro-box { background:#E8F2FC; border:1px solid #b9d4ee; border-radius:8px; padding:16px 20px; margin:4px 0 16px; font-size:11pt; line-height:1.6; color:#1a1a1a; }
+.intro-box p { margin:0 0 10px; }
+.intro-box p:last-child { margin-bottom:0; }
+.intro-box strong { color:#004996; }
 /* Antwort-Buttons: Hover und Auswahl einheitlich blau */
 div[data-testid="stButton"] button {
   border: 1px solid #004996 !important;
@@ -185,12 +189,51 @@ st.markdown(
 st.markdown('<h1 class="ppwrtitle">PPWR-Rollenprüfung</h1>', unsafe_allow_html=True)
 st.markdown('<p class="subtitle">Interaktive Ermittlung Ihrer Rolle nach der PPWR</p>', unsafe_allow_html=True)
 
+st.markdown(
+    '<div class="intro-box">'
+    '<p><strong>Wozu dient der PPWR-Rollencheck?</strong> Die EU-Verpackungsverordnung (PPWR) regelt Pflichten – z. B. '
+    'Nachweis der Konformität, Registrierung, Meldepflichten oder erweiterte Herstellerverantwortung – nach der '
+    '<strong>Rolle</strong>, die ein Unternehmen in der Lieferkette einnimmt. Ob Sie Erzeuger, Hersteller, Lieferant, '
+    'Importeur oder Vertreiber sind, hängt von rechtlich präzisen Kriterien ab – und ein Unternehmen kann '
+    '<strong>mehrere Rollen gleichzeitig</strong> haben, auch dasselbe Produkt in unterschiedlichen Ländern. Dieser '
+    'Rollencheck führt Sie Schritt für Schritt durch die maßgeblichen Abgrenzungsfragen der PPWR, damit Sie erkennen, '
+    'welche Pflichten Sie konkret betreffen.</p>'
+    '<p><strong>An wen richtet sich der Check?</strong> An alle Unternehmen, die Verpackungen, Verpackungsmaterial oder '
+    'verpackte Produkte in der EU herstellen, liefern, importieren, vertreiben oder in Verkehr bringen – von '
+    'Verpackungsherstellern über Markeninhaber und Abfüller bis zu Importeuren und Händlern.</p>'
+    '<p>Der PPWR-Rollencheck ist keine Rechtsberatung im Einzelfall. Er dient ausschließlich zu Informationszwecken '
+    'und ersetzt keine Rechtsberatung im Einzelfall durch einen Anwalt oder Compliance-Experten.</p>'
+    '<p>Sie sind noch kein IK-Mitglied, möchten aber bei gesetzlichen Änderungen, wirtschaftlichen Entwicklungen und '
+    'politischen Gestaltungsmöglichkeiten auf dem Laufenden bleiben? Dann freuen wir uns auf den Austausch mit Ihnen. '
+    'Unser Geschäftsführer Dr. Martin Engelmann ist gerne für Sie da: '
+    '<a href="mailto:M.Engelmann@kunststoffverpackungen.de">M.Engelmann@kunststoffverpackungen.de</a>.</p>'
+    '</div>',
+    unsafe_allow_html=True,
+)
+
 with st.expander("Definitionen der Rollen im Überblick"):
     st.markdown("**Lieferant** ist, wer Verpackungen oder Verpackungsmaterial an einen Erzeuger liefert. Er muss dem Erzeuger alle Informationen und Unterlagen zur Verfügung stellen, die dieser zum Nachweis der Konformität der Verpackungen benötigt (auf Papier oder in elektronischer Form).")
     st.markdown("**Erzeuger** ist, wer eine Verpackung oder ein verpacktes Produkt unter eigenem Namen oder eigener Marke entwickeln oder herstellen lässt oder selbst herstellt, um diese/s in der EU in Verkehr zu bringen. Der Erzeuger muss die Konformität der Verpackung nachweisen (u. a. Nachhaltigkeits- und Kennzeichnungsanforderungen, EU-Konformitätserklärung).")
     st.markdown("**Hersteller** ist der Erzeuger, Importeur oder Vertreiber, der in dem EU-Mitgliedstaat, in dem die Verpackung zu Abfall wird, für diese verantwortlich ist. Er registriert sich im nationalen Register, meldet jährlich die in Verkehr gebrachten Mengen und trägt die erweiterte Herstellerverantwortung – je Mitgliedstaat gibt es einen Hersteller.")
     st.markdown("**Importeur** ist jede in der EU ansässige natürliche oder juristische Person, die Verpackungen aus einem Drittland (d. h. von außerhalb der EU) erstmals in der EU bereitstellt.")
     st.markdown("**Vertreiber** ist jede natürliche oder juristische Person in der Lieferkette, die Verpackungen auf dem EU-Markt bereitstellt, mit Ausnahme des Erzeugers oder des Importeurs. Vertreiber müssen die Einhaltung der Vorgaben durch Erzeuger, Importeure und Hersteller überprüfen.")
+
+with st.expander("Definitionen Verpackung und Verpackungsmaterial im Überblick"):
+    _app_dir = os.path.dirname(__file__)
+    for _img_file, _img_caption in (
+        ("IK_Verpackungsmaterialien_vs_Verpackung.png", "Verpackungsmaterialien vs. Verpackung"),
+        ("IK_Verpackungsdefinition.png", "Verpackungsdefinition"),
+    ):
+        _img_path = os.path.join(_app_dir, _img_file)
+        st.image(_img_path, caption=f"{_img_caption} © IK Industrievereinigung Kunststoffverpackungen e. V.")
+        with open(_img_path, "rb") as _f:
+            st.download_button(
+                f"Grafik „{_img_caption}“ herunterladen",
+                data=_f.read(),
+                file_name=_img_file,
+                mime="image/png",
+                key=f"download_{_img_file}",
+            )
 
 # ---------------- Assistent ----------------
 def render_tree(key):
