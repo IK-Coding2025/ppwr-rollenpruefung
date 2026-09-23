@@ -7,11 +7,12 @@ st.set_page_config(page_title="PPWR-Rollenprüfung", layout="centered")
 st.markdown("""
 <style>
 html, body, .stApp { font-family: Arial, sans-serif; }
-.header-wrap { display: flex; flex-direction: column; align-items: center; text-align: center; }
-.logo-wrap { text-align: center; margin-bottom: 0.5rem; }
+.header-wrap { text-align: center; width: 100%; }
+.logo-wrap { width: 100%; text-align: center; margin-bottom: 0.5rem; }
 .logo-wrap img { width: 200px; }
-h1.ppwrtitle { color: #004996; text-align: center; margin: 0.5rem 0 0; font-family: Arial, sans-serif; }
-.subtitle { text-align: center; color: #004996; margin-top: 2px; font-family: Arial, sans-serif; }
+.header-wrap .titleblock { color: #004996; font-family: Arial, sans-serif; }
+.header-wrap .titleblock .maintitle { display: block; font-size: 2rem; font-weight: bold; margin: 0.5rem 0 0; }
+.header-wrap .titleblock .subtitle { display: block; font-size: 1rem; font-weight: normal; margin-top: 2px; }
 /* Test-Auswahl als Pills */
 div[data-testid="stRadio"] > div { padding-top: 0; }
 div[data-testid="stRadio"] div[role="radiogroup"] { gap: 8px; flex-wrap: wrap; }
@@ -186,8 +187,10 @@ with open(os.path.join(os.path.dirname(__file__), "logo.jpg"), "rb") as _f:
 st.markdown(
     '<div class="header-wrap">'
     f'<div class="logo-wrap"><img src="data:image/jpeg;base64,{_logo_b64}" alt="IK Industrievereinigung Kunststoffverpackungen e.V."></div>'
-    '<h1 class="ppwrtitle">PPWR-Rollenprüfung</h1>'
-    '<p class="subtitle">Interaktive Ermittlung Ihrer Rolle nach der PPWR</p>'
+    '<div class="titleblock">'
+    '<span class="maintitle">PPWR-Rollenprüfung</span>'
+    '<span class="subtitle">Interaktive Ermittlung Ihrer Rolle nach der PPWR</span>'
+    '</div>'
     '</div>',
     unsafe_allow_html=True,
 )
