@@ -7,6 +7,7 @@ st.set_page_config(page_title="PPWR-Rollenprüfung", layout="centered")
 st.markdown("""
 <style>
 html, body, .stApp { font-family: Arial, sans-serif; }
+.header-wrap { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .logo-wrap { text-align: center; margin-bottom: 0.5rem; }
 .logo-wrap img { width: 200px; }
 h1.ppwrtitle { color: #004996; text-align: center; margin: 0.5rem 0 0; font-family: Arial, sans-serif; }
@@ -183,11 +184,13 @@ for k in ("lief", "a2", "a3", "a4"):
 with open(os.path.join(os.path.dirname(__file__), "logo.jpg"), "rb") as _f:
     _logo_b64 = base64.b64encode(_f.read()).decode()
 st.markdown(
-    f'<div class="logo-wrap"><img src="data:image/jpeg;base64,{_logo_b64}" alt="IK Industrievereinigung Kunststoffverpackungen e.V."></div>',
+    '<div class="header-wrap">'
+    f'<div class="logo-wrap"><img src="data:image/jpeg;base64,{_logo_b64}" alt="IK Industrievereinigung Kunststoffverpackungen e.V."></div>'
+    '<h1 class="ppwrtitle">PPWR-Rollenprüfung</h1>'
+    '<p class="subtitle">Interaktive Ermittlung Ihrer Rolle nach der PPWR</p>'
+    '</div>',
     unsafe_allow_html=True,
 )
-st.markdown('<h1 class="ppwrtitle">PPWR-Rollenprüfung</h1>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Interaktive Ermittlung Ihrer Rolle nach der PPWR</p>', unsafe_allow_html=True)
 
 st.markdown(
     '<div class="intro-box">'
