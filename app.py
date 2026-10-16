@@ -210,15 +210,16 @@ TERM_TIPS = {
         "Nachweis der Konformität der Verpackungen benötigt."
     ),
     "Erzeuger": (
-        "„Erzeuger“ ist, wer eine Verpackung oder ein verpacktes Produkt unter eigenem Namen oder "
-        "eigener Marke entwickeln oder herstellen lässt oder selbst herstellt, um diese/s in der EU "
-        "in Verkehr zu bringen. Der Erzeuger muss die Konformität der Verpackung nachweisen."
+        "„Erzeuger“ ist, wer Verpackungen oder ein verpacktes Produkt (1.) selbst herstellt oder "
+        "(2.) unter eigenem Namen oder eigener Marke durch ein anderes Unternehmen entwickeln oder "
+        "herstellen lässt – außer es handelt sich bei dem beauftragenden Unternehmen um ein "
+        "Kleinstunternehmen. Der Erzeuger muss die Konformität der Verpackung nachweisen."
     ),
     "Hersteller": (
-        "„Hersteller“ ist der Erzeuger, Importeur oder Vertreiber, der in dem EU-Mitgliedstaat, in "
-        "dem die Verpackung zu Abfall wird, für diese verantwortlich ist. Er registriert sich im "
-        "nationalen Register, meldet jährlich die in Verkehr gebrachten Mengen und trägt die "
-        "erweiterte Herstellerverantwortung."
+        "„Hersteller“ ist jeder Erzeuger, Importeur oder Vertreiber, der erstmals bestimmte "
+        "Verpackungen oder verpackte Produkte in einem EU-Mitgliedstaat bereitstellt. Er "
+        "registriert sich im nationalen Register, meldet jährlich die in Verkehr gebrachten Mengen "
+        "und trägt die erweiterte Herstellerverantwortung."
     ),
     "Importeur": (
         "„Importeur“ ist jede in der EU ansässige natürliche oder juristische Person, die "
@@ -345,9 +346,23 @@ st.markdown(
 )
 
 with st.expander("Definitionen der Rollen im Überblick"):
-    st.markdown("**Lieferant** ist, wer Verpackungen oder Verpackungsmaterial an einen Erzeuger liefert. Er muss dem Erzeuger alle Informationen und Unterlagen zur Verfügung stellen, die dieser zum Nachweis der Konformität der Verpackungen benötigt (auf Papier oder in elektronischer Form).")
-    st.markdown("**Erzeuger** ist, wer eine Verpackung oder ein verpacktes Produkt unter eigenem Namen oder eigener Marke entwickeln oder herstellen lässt oder selbst herstellt, um diese/s in der EU in Verkehr zu bringen. Der Erzeuger muss die Konformität der Verpackung nachweisen (u. a. Nachhaltigkeits- und Kennzeichnungsanforderungen, EU-Konformitätserklärung).")
-    st.markdown("**Hersteller** ist der Erzeuger, Importeur oder Vertreiber, der in dem EU-Mitgliedstaat, in dem die Verpackung zu Abfall wird, für diese verantwortlich ist. Er registriert sich im nationalen Register, meldet jährlich die in Verkehr gebrachten Mengen und trägt die erweiterte Herstellerverantwortung – je Mitgliedstaat gibt es einen Hersteller.")
+    _lieferant_verpackungen_tip = html.escape(
+        "„Verpackungen“ meint hier (aber auch nur hier!) leere Transportverpackungen, leere "
+        "Serviceverpackungen oder leere Primärproduktionsverpackungen, die mit dem Namen bzw. der "
+        "Marke des beauftragenden Unternehmens gekennzeichnet sind (Fall von Art. 3 Abs. 1 Nr. 13 "
+        "a) und b) PPWR)",
+        quote=True,
+    )
+    st.markdown(
+        '<strong>Lieferant</strong> ist, wer '
+        f'<span class="term-tip" data-tip="{_lieferant_verpackungen_tip}">Verpackungen</span> '
+        'oder Verpackungsmaterial an einen Erzeuger liefert. Er muss dem Erzeuger alle '
+        'Informationen und Unterlagen zur Verfügung stellen, die dieser zum Nachweis der '
+        'Konformität der Verpackungen benötigt (auf Papier oder in elektronischer Form).',
+        unsafe_allow_html=True,
+    )
+    st.markdown("**Erzeuger** ist, wer Verpackungen oder ein verpacktes Produkt (1.) selbst herstellt oder (2.) unter eigenem Namen oder eigener Marke durch ein anderes Unternehmen entwickeln oder herstellen lässt – außer es handelt sich bei dem beauftragenden Unternehmen um ein Kleinstunternehmen. Der Erzeuger muss die Konformität der Verpackung nachweisen (u. a. Nachhaltigkeits- und Kennzeichnungsanforderungen, EU-Konformitätserklärung).")
+    st.markdown("**Hersteller** ist jeder Erzeuger, Importeur oder Vertreiber, der erstmals bestimmte Verpackungen oder verpackte Produkte in einem EU-Mitgliedstaat bereitstellt. Er registriert sich im nationalen Register, meldet jährlich die in Verkehr gebrachten Mengen und trägt die erweiterte Herstellerverantwortung – je Mitgliedstaat gibt es einen Hersteller.")
     st.markdown("**Importeur** ist jede in der EU ansässige natürliche oder juristische Person, die Verpackungen aus einem Drittland (d. h. von außerhalb der EU) erstmals in der EU bereitstellt.")
     st.markdown("**Vertreiber** ist jede natürliche oder juristische Person in der Lieferkette, die Verpackungen auf dem EU-Markt bereitstellt, mit Ausnahme des Erzeugers oder des Importeurs. Vertreiber müssen die Einhaltung der Vorgaben durch Erzeuger, Importeure und Hersteller überprüfen.")
 
