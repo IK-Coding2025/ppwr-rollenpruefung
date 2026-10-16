@@ -94,7 +94,7 @@ TREES = {
         "start": "q1",
         "nodes": {
             "q1": {"short": "Lieferung von Verpackungen/Material", "q": "Liefern Sie <strong>Verpackungen</strong> oder <strong>Verpackungsmaterial</strong>?", "yes": "q2", "no": "res_kein1"},
-            "q2": {"short": "Lieferung an Erzeuger", "q": "Liefern Sie die Verpackungen oder das Verpackungsmaterial an einen <strong>Erzeuger</strong> (Art. 3 Abs. 1 Nr. 13 PPWR)?", "yes": "res_ja", "no": "q3", "example": "Beispiel: Sie liefern „Bauteile“ der Verpackung – z. B. eine Folienrolle, die Ihr Kunde erst noch zu einem Beutel formt und dann befüllt. Ihr Kunde macht daraus also erst die fertige, gefüllte Verpackung. Oder Sie liefern fertige, aber noch leere Verpackungen – z. B. Joghurtbecher oder Flaschen, die Ihr Kunde abfüllt und dann als sein Produkt in den Verkehr bringt."},
+            "q2": {"short": "Lieferung an Erzeuger", "q": "Liefern Sie die Verpackungen oder das Verpackungsmaterial an einen <strong>Erzeuger</strong> (Art. 3 Abs. 1 Nr. 13 PPWR)?", "yes": "res_ja", "no": "q3", "example": "Beispiel: Sie liefern „Bauteile“ der Verpackung – z. B. eine Folie auf Rolle, die Ihr Kunde erst noch zu einem Beutel formt und dann befüllt. Ihr Kunde macht daraus also erst die fertige, gefüllte Verpackung. Oder Sie liefern fertige, aber noch leere Verpackungen – z. B. Joghurtbecher oder Flaschen, die Ihr Kunde abfüllt und dann als sein Produkt in den Verkehr bringt."},
             "q3": {"short": "Andere Kunden / Drittstaaten", "q": "Liefern Sie an <strong>andere Kunden</strong>, z. B. <strong>Händler/Vertreiber</strong> (sofern diese nicht als Erzeuger handeln) oder an <strong>Abnehmer in Drittstaaten</strong>?", "yes": "res_kein2", "no": "res_pruef"},
         },
         "results": {
@@ -113,9 +113,9 @@ TREES = {
         "intro": "„Erzeuger“ ist derjenige natürliche oder juristische Person, die eine Verpackung oder ein verpacktes Produkt herstellt (Art. 3 Abs. 1 Nr. 13). Wegen Ausnahmen gilt für die Abgrenzung zum Lieferanten folgende Prüfreihenfolge:",
         "start": "q1",
         "nodes": {
-            "q1": {"short": "Markeninhaber", "q": "Lässt eine Person A (1.) eine <strong>Verpackung</strong> (nicht Verpackungsmaterial) oder ein verpacktes Produkt unter ihrem <strong>Namen</strong> oder ihrer <strong>Marke</strong> (durch eine Person B) entwickeln oder herstellen und (2.) stellt Person A diese/s erstmals in der EU bereit? (= <strong>Markeninhaber</strong>)", "yes": "q2", "no": "r1", "example": "Beispiel: Eine Supermarktkette (A) verkauft Joghurt unter ihrer Eigenmarke. Den Joghurtbecher lässt die Supermarktkette (A) von einem Lohnabfüller (B) herstellen und befüllen – auf dem Becher steht der Name der Supermarktkette. Die Supermarktkette bringt den befüllten Becher erstmals in der EU in Verkehr."},
+            "q1": {"short": "Markeninhaber", "q": "Lässt eine Person A (1.) eine <strong>Verpackung</strong> (nicht Verpackungsmaterial) oder ein verpacktes Produkt unter ihrem <strong>Namen</strong> oder ihrer <strong>Marke</strong> durch eine Person B entwickeln oder herstellen und (2.) stellt Person A diese/s erstmals in der EU bereit? (= <strong>Markeninhaber</strong>)", "yes": "q2", "no": "r1", "example": "Beispiel: Eine Supermarktkette (A) verkauft Joghurt unter ihrer Eigenmarke. Den Joghurtbecher lässt die Supermarktkette (A) von einem Lohnabfüller (B) herstellen und befüllen – auf dem Becher steht der Name der Supermarktkette. Die Supermarktkette bringt den befüllten Becher erstmals in der EU in Verkehr."},
             "q2": {"short": "Kleinstunternehmen", "q": "Ist der <em>Markeninhaber</em> (Person A) ein <strong>Kleinstunternehmen</strong>*?", "yes": "q3", "no": "res_mi_13a"},
-            "q3": {"short": "Person B liefert Verpackungen", "q": "Liefert Person B <strong>Verpackungen</strong> (nicht Verpackungsmaterial) an den Markeninhaber (Person A)?", "yes": "q4", "no": "r2", "example": "Beispiel: Person B, ein Kunststoffverpackungsproduzent, fertigt fertig geformte, bedruckte Müslibeutel – keine Folienrollen (also Verpackungen, nicht bloß Verpackungsmaterial). Person B liefert diese Beutel an den Markeninhaber Person A, den Familienbetrieb, der sie befüllt und erstmals in der EU in Verkehr bringt."},
+            "q3": {"short": "Person B liefert Verpackungen", "q": "Liefert Person B <strong>Verpackungen</strong> (nicht Verpackungsmaterial) an den Markeninhaber (Person A)?", "yes": "q4", "no": "r2", "example": "Beispiel: Person B, ein Kunststoffverpackungsproduzent, stellt Transportkästen (Transportverpackungen) oder Getränkebecher (Serviceverpackungen) her (also bereits Verpackungen in ihrer finalen Form, nicht Verpackungsmaterial). Person B liefert diese Verpackungen an den Markeninhaber Person A, den Familienbetrieb, der sie befüllt und erstmals in der EU in Verkehr bringt."},
             "q4": {"short": "Selber Mitgliedstaat", "q": "Sind <strong>Markeninhaber</strong> und <strong>Lieferant</strong> der Verpackung <strong>im selben EU-Mitgliedstaat</strong> ansässig?", "yes": "res_lief_13b", "no": "q5"},
             "q5": {"short": "Lieferant in EU", "q": "Ist der <strong>Lieferant der Verpackung</strong> in der <strong>EU</strong> ansässig?", "yes": "res_art15", "no": "res_mi_rueck"},
             "r1": {"short": "Leere Verkaufs-/Umverpackung", "q": "Stellt eine Person eine <strong>leere Verkaufsverpackung</strong> oder <strong>leere Umverpackung</strong> erstmals in der EU bereit?", "yes": "res_material", "no": "r2"},
@@ -172,7 +172,7 @@ TREES = {
             "q1": {"short": "Eigener Name/Marke", "q": "Bringt ein <strong>Importeur</strong> oder <strong>Vertreiber</strong> eine Verpackung (nicht Verpackungsmaterial) unter seinem <strong>eigenen Namen</strong> oder seiner <strong>eigenen Marke</strong> in der EU in Verkehr? (= <strong>Markeninhaber</strong>)", "yes": "q2", "no": "qv"},
             "q2": {"short": "Kleinstunternehmen", "q": "Ist der Importeur oder Vertreiber ein <strong>Kleinstunternehmen</strong>*?", "yes": "q3", "no": "res_iv_erz"},
             "q3": {"short": "Lieferant in EU", "q": "Ist diejenige Person, die dem Importeur oder Vertreiber die Verpackung (nicht Verpackungsmaterial) <strong>liefert</strong>, <strong>in der EU ansässig</strong>?", "yes": "res_lief_pers", "no": "res_iv_erz"},
-            "qv": {"short": "Veränderung", "q": "<strong>Verändert</strong> ein Importeur oder Vertreiber eine <strong>bereits in der EU in Verkehr gebrachte Verpackung</strong> so, dass ihre <strong>Konformität mit der PPWR beeinträchtigt</strong> werden kann?", "yes": "res_iv_erz", "no": "res_keine"},
+            "qv": {"short": "Veränderung", "q": "<strong>Verändert</strong> ein Importeur oder Vertreiber eine <strong>bereits in der EU in Verkehr gebrachte Verpackung</strong> so, dass ihre <strong>Konformität mit der PPWR beeinträchtigt</strong> werden kann?", "yes": "q2", "no": "res_keine"},
         },
         "results": {
             "res_iv_erz": {"text": "Importeur oder Vertreiber ist Erzeuger, Art. 21 Unterabs. 1", "role": "erzeuger", "value": True},
@@ -322,22 +322,24 @@ st.markdown(
 
 st.markdown(
     '<div class="intro-box">'
-    '<p><strong>Wozu dient der PPWR-Rollencheck?</strong> Die EU-Verpackungsverordnung (PPWR) regelt Pflichten – z. B. '
-    'Nachweis der Konformität, Registrierung, Meldepflichten oder erweiterte Herstellerverantwortung – nach der '
-    '<strong>Rolle</strong>, die ein Unternehmen in der Lieferkette einnimmt. Ob Sie Erzeuger, Hersteller, Lieferant, '
-    'Importeur oder Vertreiber sind, hängt von rechtlich präzisen Kriterien ab – und ein Unternehmen kann '
-    '<strong>mehrere Rollen gleichzeitig</strong> haben, auch dasselbe Produkt in unterschiedlichen Ländern. Dieser '
-    'Rollencheck führt Sie Schritt für Schritt durch die maßgeblichen Abgrenzungsfragen der PPWR, damit Sie erkennen, '
-    'welche Pflichten Sie konkret betreffen.</p>'
-    '<p><strong>An wen richtet sich der Check?</strong> An alle Unternehmen, die Verpackungen, Verpackungsmaterial oder '
-    'verpackte Produkte in der EU herstellen, liefern, importieren, vertreiben oder in Verkehr bringen – von '
-    'Verpackungsherstellern über Markeninhaber und Abfüller bis zu Importeuren und Händlern.</p>'
-    '<p>Der PPWR-Rollencheck ist keine Rechtsberatung im Einzelfall. Er dient ausschließlich zu Informationszwecken '
-    'und ersetzt keine Rechtsberatung im Einzelfall durch einen Anwalt oder Compliance-Experten.</p>'
-    '<p>Sie sind noch kein IK-Mitglied, möchten aber bei gesetzlichen Änderungen, wirtschaftlichen Entwicklungen und '
-    'politischen Gestaltungsmöglichkeiten auf dem Laufenden bleiben? Dann freuen wir uns auf den Austausch mit Ihnen. '
-    'Unser Geschäftsführer Dr. Martin Engelmann ist gerne für Sie da: '
-    '<a href="mailto:M.Engelmann@kunststoffverpackungen.de">M.Engelmann@kunststoffverpackungen.de</a>.</p>'
+    '<p><strong>Wozu dient der PPWR-Rollencheck?</strong> Die unmittelbar wirksamen Pflichten der '
+    'EU-Verpackungsverordnung (PPWR) – z. B. der Nachweis der Konformität, die Einhaltung von '
+    'Grenzwerten, erweiterte Herstellerpflichten etc. – richten sich nach der jeweiligen '
+    '<strong>Rolle</strong>, die ein Unternehmen in der Lieferkette einnimmt. Denn für Erzeuger, '
+    'Hersteller, Lieferanten, Importeure und Vertreiber gelten unterschiedliche Pflichten. Ein '
+    'Unternehmen kann auch <strong>mehrere Rollen gleichzeitig</strong> haben. Dieser Rollencheck '
+    'führt Sie Schritt für Schritt durch die maßgeblichen Abgrenzungsfragen der PPWR, damit Sie '
+    'erkennen, welche Pflichten Sie konkret betreffen.</p>'
+    '<p><strong>An wen richtet sich der Check?</strong> An alle Unternehmen, die Verpackungsmaterial, '
+    'Verpackungen oder verpackte Produkte in der EU in Verkehr bringen – von Verpackungsproduzenten '
+    'über Abfüller und Markeninhaber bis zu Händlern und Importeuren.</p>'
+    '<p>Der PPWR-Rollencheck ist keine Rechtsberatung im Einzelfall. Er dient ausschließlich zu '
+    'Informationszwecken und ersetzt keine Rechtsberatung im Einzelfall durch einen Anwalt oder '
+    'Compliance-Experten.</p>'
+    '<p>Sie sind noch kein IK-Mitglied, möchten aber bei gesetzlichen Änderungen, wirtschaftlichen '
+    'Entwicklungen und politischen Gestaltungsmöglichkeiten auf dem Laufenden bleiben? Dann freuen '
+    'wir uns auf den Austausch mit Ihnen. Bitte melden Sie sich bei Isabell Kolberg '
+    '(i.kolberg(at)kunststoffverpackungen.de).</p>'
     '</div>',
     unsafe_allow_html=True,
 )
